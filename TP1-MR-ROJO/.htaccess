@@ -1,0 +1,42 @@
+Options -Indexes
+RewriteEngine On
+
+# --- URL Rewriting FrontOffice ---
+RewriteRule ^actualites/?$ index.php?page=actualites [L,QSA]
+RewriteRule ^categorie/([a-z-]+)/?$ index.php?page=categorie&slug=$1 [L,QSA]
+RewriteRule ^article/([0-9]+)/([a-z0-9-]+)/?$ index.php?page=article&id=$1&slug=$2 [L,QSA]
+RewriteRule ^recherche/?$ index.php?page=recherche [L,QSA]
+RewriteRule ^contact/?$ index.php?page=contact [L,QSA]
+
+# --- URL Rewriting BackOffice ---
+RewriteRule ^admin/?$ back/login.php [L]
+RewriteRule ^admin/dashboard/?$ back/dashboard.php [L]
+RewriteRule ^admin/articles/?$ back/pages/articles.php [L]
+RewriteRule ^admin/categories/?$ back/pages/categories.php [L]
+
+# --- Compression Gzip ---
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json
+  AddOutputFilterByType DEFLATE text/xml application/xml application/xml+rss
+</IfModule>
+
+# --- Cache navigateur ---
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/gif "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType text/css "access plus 1 week"
+  ExpiresByType application/javascript "access plus 1 week"
+  ExpiresByType application/json "access plus 1 day"
+  ExpiresByType text/html "access plus 1 day"
+</IfModule>
+
+# --- Sécurité Headers ---
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options nosniff
+  Header set X-Frame-Options DENY
+  Header set X-XSS-Protection "1; mode=block"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
