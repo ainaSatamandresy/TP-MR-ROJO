@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  # Service PostgreSQL
+  db:
+    image: postgres:15
+    container_name: iran_db
+    environment:
+      POSTGRES_DB: iran_news
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - iran_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Service PHP + Apache
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: iran_web
+    ports:
+      - "80:80"
+    environment:
+      DB_HOST: db
+      DB_USER: admin
+      DB_PASSWORD: secret
+      DB_NAME: iran_news
+      DB_PORT: 5432
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - iran_network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  iran_network:
+    driver: bridge
