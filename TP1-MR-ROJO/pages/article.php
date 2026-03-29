@@ -4,6 +4,7 @@
  */
 
 include '../inc/header.php';
+include '../inc/helpers.php';
 include '../functions/article.php';
 
 // Récupérer l'ID de l'article depuis l'URL réécrite
@@ -28,7 +29,7 @@ if ($id > 0) {
         <p class="meta">Publié le <?php echo date('d/m/Y à H:i', strtotime($article['date_publication'])); ?></p>
         
         <div class="article-content">
-            <?php echo nl2br(htmlspecialchars($article['contenu'])); ?>
+            <?php echo sanitizeRichHtml($article['contenu']); ?>
         </div>
     </article>
 <?php else: ?>
