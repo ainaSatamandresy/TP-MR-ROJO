@@ -11,6 +11,11 @@
     <meta name="description" content="Informations sur la situation en Iran">
     <title><?php echo isset($title) ? htmlspecialchars($title) : 'Iran News'; ?></title>
     <link rel="stylesheet" href="/assets/css/style.css">
+    <?php if (!empty($page_styles) && is_array($page_styles)): ?>
+        <?php foreach ($page_styles as $stylesheet): ?>
+            <link rel="stylesheet" href="<?php echo escapeHtml((string) $stylesheet); ?>">
+        <?php endforeach; ?>
+    <?php endif; ?>
 </head>
 <body>
     <header>
