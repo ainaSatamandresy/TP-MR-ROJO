@@ -295,7 +295,7 @@ $page_lang = 'fr';
                                         <?php echo date('d/m/Y', strtotime($article['date_publication'])); ?>
                                     </time>
                                 </div>
-                                <p class="excerpt"><?php echo mb_substr(escapeHtml($article['contenu']), 0, 150) . '...'; ?></p>
+                                <p class="excerpt"><?php echo escapeHtml(excerptFromHtml($article['contenu'], 150)); ?></p>
                             </div>
                         </article>
                     <?php endforeach; ?>
@@ -340,7 +340,7 @@ $page_lang = 'fr';
                                         </a>
                                     <?php endif; ?>
                                 </div>
-                                <p class="excerpt"><?php echo mb_substr(escapeHtml($article['contenu']), 0, 150) . '...'; ?></p>
+                                <p class="excerpt"><?php echo escapeHtml(excerptFromHtml($article['contenu'], 150)); ?></p>
                             </div>
                         </article>
                     <?php endforeach; ?>
