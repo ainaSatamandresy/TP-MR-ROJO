@@ -1,7 +1,7 @@
 <?php
-$id=$_GET['id'];
-$idcat=$_GET['idcat'];
-?>
+/**
+ * Page legacy: redirection vers l'accueil front.
+ */
 
-<p>Id : <?php echo $id;?></p>
-<p>IdCAT : <?php echo $idcat;?></p>
+header('Location: /', true, 301);
+exit;

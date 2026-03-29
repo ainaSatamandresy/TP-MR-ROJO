@@ -30,6 +30,27 @@ if (!in_array($page, $routes)) {
     $page = 'accueil';
 }
 
+$pageTitles = [
+    'accueil' => 'Accueil - Iran News',
+    'actualites' => 'Actualites - Iran News',
+    'categorie' => 'Categorie - Iran News',
+    'article' => 'Article - Iran News',
+    'recherche' => 'Recherche - Iran News',
+    'contact' => 'Contact - Iran News'
+];
+
+$pageStylesMap = [
+    'accueil' => ['/assets/css/front/accueil.css'],
+    'actualites' => ['/assets/css/front/accueil.css'],
+    'categorie' => ['/assets/css/front/accueil.css'],
+    'recherche' => ['/assets/css/front/accueil.css'],
+    'contact' => ['/assets/css/front/accueil.css'],
+    'article' => ['/assets/css/front/article.css']
+];
+
+$title = $pageTitles[$page] ?? 'Iran News';
+$page_styles = $pageStylesMap[$page] ?? [];
+
 // Inclure l'en-tête
 require_once 'inc/header.php';
 
