@@ -60,6 +60,179 @@ function escapeHtml($texte) {
 }
 
 /**
+ * Vérifier qu'une URL est sûre pour un attribut href/src
+ */
+function isSafeUrl($url, $allowAnchor = false) {
+    $url = trim((string)$url);
+    if ($url === '') {
+        return false;
+    }
+
+    if ($allowAnchor && strpos($url, '#') === 0) {
+        return true;
+    }
+
+    if (strpos($url, '/') === 0) {
+        return true;
+    }
+
+    if (preg_match('/^(https?:|mailto:|tel:)/i', $url)) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Sanitizer HTML basique pour contenu riche TinyMCE
+ */
+function sanitizeRichHtml($html) {
+    $html = trim((string)$html);
+    if ($html === '') {
+        return '';
+    }
+
+    $allowedTags = [
+        'p', 'br', 'strong', 'b', 'em', 'i', 'u',
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'ul', 'ol', 'li', 'blockquote',
+        'a', 'img'
+    ];
+
+    $dangerousTags = [
+        'script', 'style', 'iframe', 'object', 'embed',
+        'svg', 'math', 'form', 'input', 'button',
+        'textarea', 'select', 'meta', 'link', 'base'
+    ];
+
+    $allowedAttributes = [
+        'a' => ['href', 'title', 'target', 'rel'],
+        'img' => ['src', 'alt', 'title', 'width', 'height', 'loading']
+    ];
+
+    $doc = new DOMDocument('1.0', 'UTF-8');
+    libxml_use_internal_errors(true);
+    $doc->loadHTML('<div id="sanitizer-root">' . $html . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    libxml_clear_errors();
+
+    $root = $doc->getElementById('sanitizer-root');
+    if (!$root) {
+        return '';
+    }
+
+    $sanitizeNode = function($node) use (&$sanitizeNode, $doc, $allowedTags, $dangerousTags, $allowedAttributes) {
+        for ($i = $node->childNodes->length - 1; $i >= 0; $i--) {
+            $child = $node->childNodes->item($i);
+
+            if ($child->nodeType === XML_COMMENT_NODE) {
+                $node->removeChild($child);
+                continue;
+            }
+
+            if ($child->nodeType !== XML_ELEMENT_NODE) {
+                continue;
+            }
+
+            $tag = strtolower($child->nodeName);
+
+            if (in_array($tag, $dangerousTags, true)) {
+                $node->removeChild($child);
+                continue;
+            }
+
+            if (!in_array($tag, $allowedTags, true)) {
+                while ($child->firstChild) {
+                    $node->insertBefore($child->firstChild, $child);
+                }
+                $node->removeChild($child);
+                continue;
+            }
+
+            if ($child->hasAttributes()) {
+                $attrs = [];
+                foreach ($child->attributes as $attr) {
+                    $attrs[] = $attr;
+                }
+
+                foreach ($attrs as $attr) {
+                    $name = strtolower($attr->nodeName);
+                    $value = trim($attr->nodeValue);
+                    $tagAllowedAttrs = $allowedAttributes[$tag] ?? [];
+
+                    if (strpos($name, 'on') === 0 || !in_array($name, $tagAllowedAttrs, true)) {
+                        $child->removeAttributeNode($attr);
+                        continue;
+                    }
+
+                    if ($tag === 'a' && $name === 'href' && !isSafeUrl($value, true)) {
+                        $child->removeAttributeNode($attr);
+                        continue;
+                    }
+
+                    if ($tag === 'img' && $name === 'src' && !isSafeUrl($value, false)) {
+                        $child->removeAttributeNode($attr);
+                        continue;
+                    }
+
+                    if ($tag === 'a' && $name === 'target' && strtolower($value) !== '_blank') {
+                        $child->removeAttribute('target');
+                        continue;
+                    }
+                }
+
+                if ($tag === 'a' && strtolower($child->getAttribute('target')) === '_blank') {
+                    $child->setAttribute('rel', 'noopener noreferrer');
+                }
+            }
+
+            $sanitizeNode($child);
+        }
+    };
+
+    $sanitizeNode($root);
+
+    $cleanHtml = '';
+    foreach ($root->childNodes as $child) {
+        $cleanHtml .= $doc->saveHTML($child);
+    }
+
+    return trim($cleanHtml);
+}
+
+/**
+ * Vérifier si un contenu riche est vide (texte absent et aucune image)
+ */
+function isRichContentEmpty($html) {
+    $html = (string)$html;
+    $hasImage = preg_match('/<img\b/i', $html) === 1;
+
+    $text = html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $text = preg_replace('/\s+/u', ' ', str_replace("\xc2\xa0", ' ', $text));
+    $text = trim((string)$text);
+
+    return $text === '' && !$hasImage;
+}
+
+/**
+ * Générer un extrait texte à partir d'un contenu HTML
+ */
+function excerptFromHtml($html, $length = 150) {
+    $text = html_entity_decode(strip_tags((string)$html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $text = preg_replace('/\s+/u', ' ', (string)$text);
+    $text = trim((string)$text);
+
+    if ($text === '') {
+        return '';
+    }
+
+    if (mb_strlen($text) <= $length) {
+        return $text;
+    }
+
+    return mb_substr($text, 0, $length) . '...';
+}
+
+/**
  * Valider une adresse email
  */
 function isValidEmail($email) {

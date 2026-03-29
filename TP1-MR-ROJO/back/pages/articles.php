@@ -22,14 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if ($action === 'create') {
         $titre = trim($_POST['titre'] ?? '');
-        $contenu = trim($_POST['contenu'] ?? '');
+        $contenu = sanitizeRichHtml($_POST['contenu'] ?? '');
         $slug = trim($_POST['slug'] ?? '');
         $id_categorie = (int)($_POST['id_categorie'] ?? 0);
         
         // Validation
         if (empty($titre)) {
             $error = "Le titre est requis";
-        } elseif (empty($contenu)) {
+        } elseif (isRichContentEmpty($contenu)) {
             $error = "Le contenu est requis";
         } elseif (empty($slug) || isSlugExists($pdo, $slug, null, 'article')) {
             $error = "Le slug doit être unique";
@@ -54,14 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'update') {
         $id = (int)($_POST['id'] ?? 0);
         $titre = trim($_POST['titre'] ?? '');
-        $contenu = trim($_POST['contenu'] ?? '');
+        $contenu = sanitizeRichHtml($_POST['contenu'] ?? '');
         $slug = trim($_POST['slug'] ?? '');
         $id_categorie = (int)($_POST['id_categorie'] ?? 0);
         
         // Validation
         if (empty($titre)) {
             $error = "Le titre est requis";
-        } elseif (empty($contenu)) {
+        } elseif (isRichContentEmpty($contenu)) {
             $error = "Le contenu est requis";
         } elseif (empty($slug) || isSlugExists($pdo, $slug, $id, 'article')) {
             $error = "Le slug doit être unique";
@@ -480,7 +480,7 @@ if (isset($_GET['edit'])) {
                     </div>
                     
                     <div class="form-container">
-                        <form method="POST" action="">
+                        <form id="articleForm" method="POST" action="">
                             <input type="hidden" name="action" value="<?php echo $editId ? 'update' : 'create'; ?>">
                             <?php if ($editId): ?>
                                 <input type="hidden" name="id" value="<?php echo $editId; ?>">
@@ -531,7 +531,6 @@ if (isset($_GET['edit'])) {
                                     id="contenu" 
                                     name="contenu" 
                                     placeholder="Contenu de l'article..."
-                                    required
                                 ><?php echo $editArticle ? escapeHtml($editArticle['contenu']) : ''; ?></textarea>
                             </div>
                             
@@ -570,7 +569,7 @@ if (isset($_GET['edit'])) {
                                         <tr>
                                             <td class="article-title"><?php echo escapeHtml($article['titre']); ?></td>
                                             <td><?php echo escapeHtml($article['categorie_nom'] ?? 'Sans catégorie'); ?></td>
-                                            <td class="article-preview"><?php echo mb_substr(escapeHtml($article['contenu']), 0, 100) . '...'; ?></td>
+                                            <td class="article-preview"><?php echo escapeHtml(excerptFromHtml($article['contenu'], 100)); ?></td>
                                             <td><?php echo date('d/m/Y', strtotime($article['date_publication'])); ?></td>
                                             <td>
                                                 <div class="actions">
@@ -638,6 +637,41 @@ if (isset($_GET['edit'])) {
                 .replace(/^-+|-+$/g, '');
             document.getElementById('slug').value = slug;
         });
+    </script>
+
+    <script src="https://cdn.tiny.cloud/1/76asbq6w8fd2frlh4vh05ptfhzkivrq7cd07sd96fcqndxg8/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+    <script>
+        tinymce.init({
+            selector: '#contenu',
+            menubar: false,
+            plugins: 'lists link image',
+            toolbar: 'undo redo | blocks | bold italic underline | bullist numlist blockquote | link image',
+            height: 320,
+            branding: false,
+            block_formats: 'Paragraphe=p; Titre 1=h1; Titre 2=h2; Titre 3=h3; Titre 4=h4; Titre 5=h5; Titre 6=h6',
+            valid_elements: 'p,br,strong/b,em/i,u,h1,h2,h3,h4,h5,h6,ul,ol,li,blockquote,a[href|title|target|rel],img[src|alt|title|width|height|loading]'
+        });
+
+        const articleForm = document.getElementById('articleForm');
+        if (articleForm) {
+            articleForm.addEventListener('submit', function(event) {
+                if (typeof tinymce !== 'undefined') {
+                    tinymce.triggerSave();
+                    const editor = tinymce.get('contenu');
+
+                    if (editor) {
+                        const textContent = editor.getContent({ format: 'text' }).replace(/\s+/g, ' ').trim();
+                        const hasImage = /<img\b/i.test(editor.getContent());
+
+                        if (!textContent && !hasImage) {
+                            event.preventDefault();
+                            alert('Le contenu est requis.');
+                            editor.focus();
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
