@@ -3,38 +3,13 @@
  * Liste des articles par catégorie
  */
 
-$slug = trim((string) ($_GET['slug'] ?? ''));
-$currentPage = max(1, (int) ($_GET['p'] ?? 1));
-$perPage = 10;
-$offset = ($currentPage - 1) * $perPage;
-$category = null;
-$articles = [];
-$totalPages = 1;
+require_once __DIR__ . '/../functions/listing.php';
 
-if ($slug !== '') {
-    $stmtCategory = $pdo->prepare('SELECT id, nom, slug FROM categorie WHERE slug = :slug LIMIT 1');
-    $stmtCategory->execute(['slug' => $slug]);
-    $category = $stmtCategory->fetch();
-
-    if ($category) {
-        $stmtCount = $pdo->prepare('SELECT COUNT(*) FROM article WHERE id_categorie = :id_categorie');
-        $stmtCount->execute(['id_categorie' => $category['id']]);
-        $totalArticles = (int) $stmtCount->fetchColumn();
-        $totalPages = max(1, (int) ceil($totalArticles / $perPage));
-
-        $sql = "SELECT *
-                FROM article
-                WHERE id_categorie = :id_categorie
-                ORDER BY date_publication DESC
-                LIMIT :limit OFFSET :offset";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':id_categorie', (int) $category['id'], PDO::PARAM_INT);
-        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
-        $articles = $stmt->fetchAll();
-    }
-}
+$categorieData = getFrontCategorieData($pdo, $_GET);
+$slug = $categorieData['slug'];
+$category = $categorieData['category'];
+$articles = $categorieData['articles'];
+$totalPages = $categorieData['total_pages'];
 ?>
 
 <section class="container">

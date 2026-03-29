@@ -10,6 +10,9 @@ session_start();
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/inc/db.php';
 require_once __DIR__ . '/inc/helpers.php';
+require_once __DIR__ . '/front/functions/accueil.php';
+require_once __DIR__ . '/front/functions/article.php';
+require_once __DIR__ . '/front/functions/listing.php';
 
 // Déterminer la page à afficher
 $page = $_GET['page'] ?? 'accueil';
@@ -50,6 +53,8 @@ $pageStylesMap = [
 
 $title = $pageTitles[$page] ?? 'Iran News';
 $page_styles = $pageStylesMap[$page] ?? [];
+$hide_global_header = ($page === 'accueil');
+$hide_global_footer = ($page === 'accueil');
 
 // Inclure l'en-tête
 require_once 'inc/header.php';

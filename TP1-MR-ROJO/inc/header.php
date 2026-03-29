@@ -18,15 +18,17 @@
     <?php endif; ?>
 </head>
 <body>
-    <header>
-        <nav>
-            <h1><a href="/">Iran News</a></h1>
-            <ul>
-                <li><a href="/">Accueil</a></li>
-                <li><a href="/?page=categorie&id=1">Politique</a></li>
-                <li><a href="/?page=categorie&id=2">Militaire</a></li>
-                <li><a href="/?page=categorie&id=3">Économie</a></li>
-            </ul>
-        </nav>
-    </header>
+    <?php if (empty($hide_global_header)): ?>
+        <header>
+            <nav>
+                <h1><a href="/">Iran News</a></h1>
+                <ul>
+                    <li><a href="/">Accueil</a></li>
+                    <li><a href="/actualites/">Actualités</a></li>
+                    <li><a href="/recherche/">Recherche</a></li>
+                    <li><a href="/contact/">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+    <?php endif; ?>
     <main>
