@@ -7,6 +7,7 @@ session_start();
 
 require_once __DIR__ . '/../inc/db.php';
 require_once __DIR__ . '/../inc/helpers.php';
+require_once __DIR__ . '/functions/login.php';
 
 // Rediriger si déjà connecté
 if (isAuthenticated()) {
@@ -19,40 +20,9 @@ $success = '';
 
 // Traiter la soumission du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
-    $password = trim($_POST['password'] ?? '');
-    
-    // Validation
-    if (empty($email) || empty($password)) {
-        $error = "Email et mot de passe requis";
-    } else {
-        try {
-            // Récupérer l'utilisateur
-            $sql = "SELECT id, email, password, nom, role FROM utilisateur WHERE email = :email";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute(['email' => $email]);
-            $user = $stmt->fetch();
-            
-            // Vérifier les identifiants
-            if ($user ) {
-                // Authentification réussie
-                session_regenerate_id(true); // Sécurité : régénérer l'ID session
-                $_SESSION['admin'] = [
-                    'id' => $user['id'],
-                    'email' => $user['email'],
-                    'nom' => $user['nom'],
-                    'role' => $user['role']
-                ];
-                
-                header('Location: /admin/dashboard/');
-                exit;
-            } else {
-                $error = "Email ou mot de passe incorrect";
-            }
-        } catch (Exception $e) {
-            $error = "Erreur lors de la connexion : " . $e->getMessage();
-        }
-    }
+    $loginResult = processAdminLogin($pdo, $_POST);
+    $error = $loginResult['error'] ?? '';
+    $success = $loginResult['success'] ?? '';
 }
 
 ?>

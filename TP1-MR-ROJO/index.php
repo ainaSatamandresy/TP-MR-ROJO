@@ -10,6 +10,9 @@ session_start();
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/inc/db.php';
 require_once __DIR__ . '/inc/helpers.php';
+require_once __DIR__ . '/front/functions/accueil.php';
+require_once __DIR__ . '/front/functions/article.php';
+require_once __DIR__ . '/front/functions/listing.php';
 
 // Déterminer la page à afficher
 $page = $_GET['page'] ?? 'accueil';

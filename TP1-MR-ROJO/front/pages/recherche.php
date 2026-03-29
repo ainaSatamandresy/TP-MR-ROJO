@@ -3,21 +3,11 @@
  * Recherche d'articles
  */
 
-$query = trim((string) ($_GET['q'] ?? ''));
-$results = [];
+require_once __DIR__ . '/../functions/listing.php';
 
-if ($query !== '') {
-    $sql = "SELECT a.*, c.nom AS categorie_nom, c.slug AS categorie_slug
-            FROM article a
-            LEFT JOIN categorie c ON a.id_categorie = c.id
-            WHERE a.titre ILIKE :query OR a.contenu ILIKE :query
-            ORDER BY a.date_publication DESC
-            LIMIT 30";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(['query' => '%' . $query . '%']);
-    $results = $stmt->fetchAll();
-}
+$searchData = getFrontRechercheData($pdo, $_GET);
+$query = $searchData['query'];
+$results = $searchData['results'];
 ?>
 
 <section class="container">

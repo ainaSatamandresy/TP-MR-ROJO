@@ -4,15 +4,16 @@
  * URL attendue: /article/{id}/{slug}
  */
 
-$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-$slug = trim($_GET['slug'] ?? '');
-$article = null;
+require_once __DIR__ . '/../functions/article.php';
 
-if ($id > 0) {
-    $article = getArticleById($pdo, $id);
+$viewData = resolveFrontArticleViewData($pdo, $_GET);
+
+if ($viewData['status'] === 'redirect') {
+    header('Location: ' . $viewData['url'], true, 301);
+    exit;
 }
 
-if (!$article) {
+if ($viewData['status'] !== 'ok') {
     http_response_code(404);
     ?>
     <section class="article-page">
@@ -24,14 +25,9 @@ if (!$article) {
     return;
 }
 
-$expectedSlug = $article['slug'] ?? '';
-if ($expectedSlug !== '' && $slug !== '' && $slug !== $expectedSlug) {
-    header('Location: /article/' . (int) $article['id'] . '/' . rawurlencode($expectedSlug), true, 301);
-    exit;
-}
-
-$contentHtml = sanitizeRichHtml($article['contenu'] ?? '');
-$categoryName = $article['categorie_nom'] ?? '';
+$article = $viewData['article'];
+$contentHtml = $viewData['content_html'];
+$categoryName = $viewData['category_name'];
 ?>
 
 <article class="article-page">

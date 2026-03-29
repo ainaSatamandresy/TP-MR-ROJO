@@ -6,81 +6,16 @@
 session_start();
 require_once __DIR__ . '/../../inc/db.php';
 require_once __DIR__ . '/../../inc/helpers.php';
+require_once __DIR__ . '/../functions/categories.php';
 
 requireAuth();
 
-$categories = getCategoriesWithCount($pdo);
-$message = '';
-$error = '';
-$editId = null;
-$editCategory = null;
-
-// Traiter les actions
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
-    
-    if ($action === 'create') {
-        $nom = trim($_POST['nom'] ?? '');
-        $slug = trim($_POST['slug'] ?? '');
-        
-        // Validation
-        if (empty($nom)) {
-            $error = "Le nom est requis";
-        } elseif ($slug === '' || isSlugExists($pdo, $slug, null, 'categorie')) {
-            $error = "Le slug doit être unique";
-        } else {
-            try {
-                createCategory($pdo, $nom, $slug);
-                $message = "Catégorie créée avec succès";
-                // Rafraîchir la liste
-                $categories = getCategoriesWithCount($pdo);
-            } catch (Exception $e) {
-                $error = "Erreur : " . $e->getMessage();
-            }
-        }
-    } elseif ($action === 'update') {
-        $id = (int)($_POST['id'] ?? 0);
-        $nom = trim($_POST['nom'] ?? '');
-        $slug = trim($_POST['slug'] ?? '');
-        
-        // Validation
-        if (empty($nom)) {
-            $error = "Le nom est requis";
-        } elseif ($slug === '' || isSlugExists($pdo, $slug, $id, 'categorie')) {
-            $error = "Le slug doit être unique";
-        } else {
-            try {
-                updateCategory($pdo, $id, $nom, $slug);
-                $message = "Catégorie mise à jour avec succès";
-                // Rafraîchir la liste
-                $categories = getCategoriesWithCount($pdo);
-                $editId = null;
-            } catch (Exception $e) {
-                $error = "Erreur : " . $e->getMessage();
-            }
-        }
-    } elseif ($action === 'delete') {
-        $id = (int)($_POST['id'] ?? 0);
-        
-        try {
-            $result = deleteCategory($pdo, $id);
-            if ($result) {
-                $message = "Catégorie supprimée avec succès";
-                $categories = getCategoriesWithCount($pdo);
-            } else {
-                $error = "Impossible de supprimer : des articles sont liés à cette catégorie";
-            }
-        } catch (Exception $e) {
-            $error = "Erreur : " . $e->getMessage();
-        }
-    }
-}
-
-// Récupérer la catégorie si édition
-if (isset($_GET['edit'])) {
-    $editId = (int)$_GET['edit'];
-    $editCategory = getCategoryById($pdo, $editId);
-}
+$state = processAdminCategoriesPage($pdo, $_POST, $_GET);
+$categories = $state['categories'];
+$message = $state['message'];
+$error = $state['error'];
+$editId = $state['editId'];
+$editCategory = $state['editCategory'];
 
 ?>
 <!DOCTYPE html>

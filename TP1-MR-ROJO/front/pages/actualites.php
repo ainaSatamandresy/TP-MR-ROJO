@@ -3,24 +3,12 @@
  * Liste des actualités
  */
 
-$currentPage = max(1, (int) ($_GET['p'] ?? 1));
-$perPage = 10;
-$offset = ($currentPage - 1) * $perPage;
+require_once __DIR__ . '/../functions/listing.php';
 
-$stmtCount = $pdo->query('SELECT COUNT(*) FROM article');
-$totalArticles = (int) $stmtCount->fetchColumn();
-$totalPages = max(1, (int) ceil($totalArticles / $perPage));
-
-$sql = "SELECT a.*, c.nom AS categorie_nom, c.slug AS categorie_slug
-        FROM article a
-        LEFT JOIN categorie c ON a.id_categorie = c.id
-        ORDER BY a.date_publication DESC
-        LIMIT :limit OFFSET :offset";
-$stmt = $pdo->prepare($sql);
-$stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
-$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-$stmt->execute();
-$articles = $stmt->fetchAll();
+$actualitesData = getFrontActualitesData($pdo, $_GET);
+$currentPage = $actualitesData['current_page'];
+$totalPages = $actualitesData['total_pages'];
+$articles = $actualitesData['articles'];
 ?>
 
 <section class="container">

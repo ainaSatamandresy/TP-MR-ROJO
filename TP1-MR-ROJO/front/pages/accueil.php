@@ -3,30 +3,13 @@
  * Page Accueil - FrontOffice
  */
 
-try {
-    // Récupérer les catégories
-    $categories = getAllCategories($pdo);
+require_once __DIR__ . '/../functions/accueil.php';
 
-    // Récupérer les articles mis en avant
-    $sql = "SELECT * FROM article ORDER BY date_publication DESC LIMIT 3";
-    $stmt = $pdo->query($sql);
-    $featured_articles = $stmt->fetchAll();
-
-    // Récupérer les derniers articles
-    $sql = "SELECT a.*, c.nom AS categorie_nom, c.slug AS categorie_slug
-            FROM article a
-            LEFT JOIN categorie c ON a.id_categorie = c.id
-            ORDER BY a.date_publication DESC
-            LIMIT 6";
-    $stmt = $pdo->query($sql);
-    $latest_articles = $stmt->fetchAll();
-} catch (Exception $e) {
-    $featured_articles = [];
-    $latest_articles = [];
-    $categories = [];
-}
-
-$page_description = 'Actualités et informations sur la situation en Iran - Géopolitique, politique et relations internationales';
+$homeData = getFrontAccueilData($pdo);
+$categories = $homeData['categories'];
+$featured_articles = $homeData['featured_articles'];
+$latest_articles = $homeData['latest_articles'];
+$page_description = $homeData['page_description'];
 ?>
 
 <header class="front-hero">

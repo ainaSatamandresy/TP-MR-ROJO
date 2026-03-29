@@ -6,102 +6,17 @@
 session_start();
 require_once __DIR__ . '/../../inc/db.php';
 require_once __DIR__ . '/../../inc/helpers.php';
+require_once __DIR__ . '/../functions/articles.php';
 
 requireAuth();
 
-$articles = getAllArticles($pdo);
-$categories = getAllCategories($pdo);
-$message = '';
-$error = '';
-$editId = null;
-$editArticle = null;
-
-// Traiter les actions
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
-    
-    if ($action === 'create') {
-        $titre = trim($_POST['titre'] ?? '');
-        $contenu = sanitizeRichHtml($_POST['contenu'] ?? '');
-        $slug = trim($_POST['slug'] ?? '');
-        $id_categorie = (int)($_POST['id_categorie'] ?? 0);
-        
-        // Validation
-        if (empty($titre)) {
-            $error = "Le titre est requis";
-        } elseif (isRichContentEmpty($contenu)) {
-            $error = "Le contenu est requis";
-        } elseif (empty($slug) || isSlugExists($pdo, $slug, null, 'article')) {
-            $error = "Le slug doit être unique";
-        } elseif ($id_categorie <= 0) {
-            $error = "Une catégorie doit être sélectionnée";
-        } else {
-            try {
-                $data = [
-                    'titre' => $titre,
-                    'contenu' => $contenu,
-                    'slug' => $slug,
-                    'id_categorie' => $id_categorie
-                ];
-                createArticle($pdo, $data);
-                $message = "Article créé avec succès";
-                // Rafraîchir la liste
-                $articles = getAllArticles($pdo);
-            } catch (Exception $e) {
-                $error = "Erreur : " . $e->getMessage();
-            }
-        }
-    } elseif ($action === 'update') {
-        $id = (int)($_POST['id'] ?? 0);
-        $titre = trim($_POST['titre'] ?? '');
-        $contenu = sanitizeRichHtml($_POST['contenu'] ?? '');
-        $slug = trim($_POST['slug'] ?? '');
-        $id_categorie = (int)($_POST['id_categorie'] ?? 0);
-        
-        // Validation
-        if (empty($titre)) {
-            $error = "Le titre est requis";
-        } elseif (isRichContentEmpty($contenu)) {
-            $error = "Le contenu est requis";
-        } elseif (empty($slug) || isSlugExists($pdo, $slug, $id, 'article')) {
-            $error = "Le slug doit être unique";
-        } elseif ($id_categorie <= 0) {
-            $error = "Une catégorie doit être sélectionnée";
-        } else {
-            try {
-                $data = [
-                    'titre' => $titre,
-                    'contenu' => $contenu,
-                    'slug' => $slug,
-                    'id_categorie' => $id_categorie
-                ];
-                updateArticle($pdo, $id, $data);
-                $message = "Article mis à jour avec succès";
-                // Rafraîchir la liste
-                $articles = getAllArticles($pdo);
-                $editId = null;
-            } catch (Exception $e) {
-                $error = "Erreur : " . $e->getMessage();
-            }
-        }
-    } elseif ($action === 'delete') {
-        $id = (int)($_POST['id'] ?? 0);
-        
-        try {
-            deleteArticle($pdo, $id);
-            $message = "Article supprimé avec succès";
-            $articles = getAllArticles($pdo);
-        } catch (Exception $e) {
-            $error = "Erreur : " . $e->getMessage();
-        }
-    }
-}
-
-// Récupérer l'article si édition
-if (isset($_GET['edit'])) {
-    $editId = (int)$_GET['edit'];
-    $editArticle = getArticleById($pdo, $editId);
-}
+$state = processAdminArticlesPage($pdo, $_POST, $_GET);
+$articles = $state['articles'];
+$categories = $state['categories'];
+$message = $state['message'];
+$error = $state['error'];
+$editId = $state['editId'];
+$editArticle = $state['editArticle'];
 
 ?>
 <!DOCTYPE html>
