@@ -1,91 +1,7 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f5f5;
-    color: #333;
-}
-
-.admin-container {
-    display: flex;
-    min-height: 100vh;
-}
-
-.sidebar {
-    width: 250px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.sidebar-logo {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.sidebar-nav {
-    list-style: none;
-}
-
-.sidebar-nav li {
-    margin-bottom: 10px;
-}
-
-.sidebar-nav a {
-    color: white;
-    text-decoration: none;
-    padding: 10px 15px;
-    display: block;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    font-size: 14px;
-}
-
-.sidebar-nav a:hover,
-.sidebar-nav a.active {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-.sidebar-logout {
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.sidebar-logout-link {
-    color: white;
-    text-decoration: none;
-    padding: 10px 15px;
-    display: block;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.main-content {
-    flex: 1;
-    overflow-y: auto;
-}
-
 .header {
-    background: white;
-    padding: 20px 30px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.header h1 {
-    font-size: 24px;
-    color: #333;
 }
 
 .user-info {
@@ -97,10 +13,6 @@ body {
 .user-info span {
     font-size: 14px;
     color: #666;
-}
-
-.content {
-    padding: 30px;
 }
 
 .stats-grid {
@@ -223,14 +135,6 @@ body {
 }
 
 @media (max-width: 768px) {
-    .admin-container {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-    }
-
     .header {
         flex-direction: column;
         gap: 10px;

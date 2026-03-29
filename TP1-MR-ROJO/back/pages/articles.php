@@ -26,6 +26,7 @@ $editArticle = $state['editArticle'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des articles | Administration</title>
     <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="/assets/css/back/common.css">
     <link rel="stylesheet" href="/assets/css/back/articles.css">
 </head>
 <body>

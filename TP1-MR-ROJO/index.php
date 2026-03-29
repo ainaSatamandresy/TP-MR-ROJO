@@ -53,6 +53,8 @@ $pageStylesMap = [
 
 $title = $pageTitles[$page] ?? 'Iran News';
 $page_styles = $pageStylesMap[$page] ?? [];
+$hide_global_header = ($page === 'accueil');
+$hide_global_footer = ($page === 'accueil');
 
 // Inclure l'en-tête
 require_once 'inc/header.php';
