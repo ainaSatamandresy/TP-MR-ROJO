@@ -1,23 +1,77 @@
 .article-page {
-    max-width: 900px;
+    max-width: 980px;
     margin: 2rem auto;
     padding: 0 1rem;
+    background: #fff;
+    border: 1px solid #d9dde3;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.article-header {
+    padding: 1.6rem 1.6rem 0;
+    margin-bottom: 1.5rem;
 }
 
 .article-page h1 {
-    margin-bottom: 0.8rem;
+    font-size: clamp(2rem, 4.2vw, 3.2rem);
+    margin-bottom: 0.9rem;
     line-height: 1.25;
+    color: #1f2d3d;
+}
+
+.article-subtitle {
+    margin-bottom: 0.9rem;
+    font-size: clamp(1.15rem, 2vw, 1.55rem);
+    line-height: 1.45;
+    color: #334a62;
+    font-weight: 600;
 }
 
 .article-meta {
-    color: #666;
-    margin-bottom: 1.2rem;
+    color: #4e4e4e;
+    margin-bottom: 0;
     font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+.article-main-figure {
+    padding: 0 1.6rem;
+    margin: 0 0 1.4rem;
+}
+
+.article-main-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+    display: block;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .article-content {
+    padding: 0 1.6rem 1.8rem;
+    border-top: 1px solid #e3e7ec;
+    margin-top: 0.6rem;
+    padding-top: 1.3rem;
     line-height: 1.7;
-    font-size: 1.05rem;
+    font-size: 1.2rem;
+    color: #2f2f2f;
+}
+
+@media (max-width: 768px) {
+    .article-page {
+        border-radius: 8px;
+    }
+
+    .article-header,
+    .article-main-figure,
+    .article-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }
 
 .article-content h1,
@@ -29,6 +83,15 @@
     margin-top: 1.4rem;
     margin-bottom: 0.7rem;
     line-height: 1.3;
+    color: #1f2d3d;
+}
+
+.article-content h2 {
+    font-size: 1.45rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-left: 4px solid #b25635;
+    padding-left: 0.7rem;
 }
 
 .article-content p,
@@ -47,5 +110,6 @@
 .article-content img {
     max-width: 100%;
     height: auto;
-    border-radius: 6px;
+    border-radius: 8px;
+    margin: 1rem 0;
 }

@@ -28,17 +28,39 @@ if ($viewData['status'] !== 'ok') {
 $article = $viewData['article'];
 $contentHtml = $viewData['content_html'];
 $categoryName = $viewData['category_name'];
+$articleLead = excerptFromHtml($article['contenu'] ?? '', 190);
 ?>
 
 <article class="article-page">
-    <h1><?php echo escapeHtml($article['titre']); ?></h1>
+    <header class="article-header">
+        <h1><?php echo escapeHtml($article['titre']); ?></h1>
 
-    <p class="article-meta">
-        Publie le <?php echo date('d/m/Y a H:i', strtotime($article['date_publication'])); ?>
-        <?php if ($categoryName !== ''): ?>
-            | Categorie: <?php echo escapeHtml($categoryName); ?>
+        <?php if ($articleLead !== ''): ?>
+            <h2 class="article-subtitle"><?php echo escapeHtml($articleLead); ?></h2>
         <?php endif; ?>
-    </p>
+
+        <p class="article-meta">
+            Publie le <?php echo date('d/m/Y a H:i', strtotime($article['date_publication'])); ?>
+            <?php if ($categoryName !== ''): ?>
+                | Categorie: <?php echo escapeHtml($categoryName); ?>
+            <?php endif; ?>
+        </p>
+    </header>
+
+    <?php if (!empty($article['image'])): ?>
+        <figure class="article-main-figure">
+            <img
+                src="/assets/images/articles/<?php echo escapeHtml((string) $article['image']); ?>"
+                alt="Illustration principale: <?php echo escapeHtml($article['titre']); ?>"
+                class="article-main-image"
+                width="1200"
+                height="675"
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+            >
+        </figure>
+    <?php endif; ?>
 
     <div class="article-content">
         <?php echo $contentHtml; ?>
