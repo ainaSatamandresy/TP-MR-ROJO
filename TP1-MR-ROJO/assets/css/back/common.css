@@ -17,7 +17,7 @@ body {
 
 .sidebar {
     width: 250px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%);
     color: white;
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -122,30 +122,30 @@ body {
 }
 
 .btn-primary {
-    background-color: #667eea;
+    background-color: #1a3a52;
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #5568d3;
+    background-color: #2d5a7b;
 }
 
 .btn-danger {
-    background-color: #f093fb;
+    background-color: #D4876A;
     color: white;
 }
 
 .btn-danger:hover {
-    background-color: #da5fef;
+    background-color: #b86b52;
 }
 
 .btn-secondary {
-    background-color: #ddd;
-    color: #333;
+    background-color: #e8ddd8;
+    color: #1a3a52;
 }
 
 .btn-secondary:hover {
-    background-color: #ccc;
+    background-color: #d4cfc8;
 }
 
 .btn-small {
@@ -199,8 +199,8 @@ body {
 .form-group textarea:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #1a3a52;
+    box-shadow: 0 0 0 3px rgba(26, 58, 82, 0.1);
 }
 
 .form-help-text {
