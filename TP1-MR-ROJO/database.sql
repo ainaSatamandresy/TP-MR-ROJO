@@ -26,6 +26,7 @@ CREATE TABLE article (
     titre VARCHAR(255) NOT NULL,
     contenu TEXT NOT NULL,
     slug VARCHAR(255) NOT NULL,
+    image VARCHAR(255),
     date_publication TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     id_categorie INTEGER NOT NULL REFERENCES categorie(id) ON DELETE CASCADE,
     vues INTEGER DEFAULT 0
