@@ -13,13 +13,28 @@ $latest_articles = $homeData['latest_articles'];
 
 <section class="container">
     <?php if (!empty($featured_articles)): ?>
-        <section>
-            <h2>À la une</h2>
-            <div class="articles-grid">
-                <?php foreach ($featured_articles as $article): ?>
-                    <article>
+        <section class="home-section">
+            <h2 class="section-title">A la une</h2>
+            <div class="articles-grid featured-grid">
+                <?php foreach ($featured_articles as $index => $article): ?>
+                    <?php $articleUrl = '/article/' . (int) $article['id'] . '/' . escapeHtml($article['slug']); ?>
+                    <article class="news-card<?php echo $index === 0 ? ' lead-card' : ''; ?>">
+                        <?php if (!empty($article['image'])): ?>
+                            <a href="<?php echo $articleUrl; ?>" class="news-cover-link">
+                                <img
+                                    src="/assets/images/articles/<?php echo escapeHtml((string) $article['image']); ?>"
+                                    alt="Illustration: <?php echo escapeHtml($article['titre']); ?>"
+                                    class="news-cover"
+                                    width="640"
+                                    height="400"
+                                    loading="<?php echo $index === 0 ? 'eager' : 'lazy'; ?>"
+                                    decoding="async"
+                                    fetchpriority="<?php echo $index === 0 ? 'high' : 'auto'; ?>"
+                                >
+                            </a>
+                        <?php endif; ?>
                         <div class="content">
-                            <h3><a href="/article/<?php echo $article['id']; ?>/<?php echo escapeHtml($article['slug']); ?>">
+                            <h3><a href="<?php echo $articleUrl; ?>">
                                 <?php echo escapeHtml($article['titre']); ?>
                             </a></h3>
                             <div class="meta">
@@ -48,13 +63,27 @@ $latest_articles = $homeData['latest_articles'];
     </section>
 
     <?php if (!empty($latest_articles)): ?>
-        <section>
-            <h2>Dernières actualités</h2>
+        <section class="home-section">
+            <h2 class="section-title">Dernieres actualites</h2>
             <div class="articles-grid">
                 <?php foreach ($latest_articles as $article): ?>
-                    <article>
+                    <?php $articleUrl = '/article/' . (int) $article['id'] . '/' . escapeHtml($article['slug']); ?>
+                    <article class="news-card">
+                        <?php if (!empty($article['image'])): ?>
+                            <a href="<?php echo $articleUrl; ?>" class="news-cover-link">
+                                <img
+                                    src="/assets/images/articles/<?php echo escapeHtml((string) $article['image']); ?>"
+                                    alt="Illustration: <?php echo escapeHtml($article['titre']); ?>"
+                                    class="news-cover"
+                                    width="640"
+                                    height="400"
+                                    loading="lazy"
+                                    decoding="async"
+                                >
+                            </a>
+                        <?php endif; ?>
                         <div class="content">
-                            <h3><a href="/article/<?php echo $article['id']; ?>/<?php echo escapeHtml($article['slug']); ?>">
+                            <h3><a href="<?php echo $articleUrl; ?>">
                                 <?php echo escapeHtml($article['titre']); ?>
                             </a></h3>
                             <div class="meta">
