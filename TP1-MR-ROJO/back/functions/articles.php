@@ -21,42 +21,70 @@ function processAdminArticlesPage(PDO $pdo, array $postData, array $queryData): 
                 'titre' => trim((string) ($postData['titre'] ?? '')),
                 'contenu' => sanitizeRichHtml($postData['contenu'] ?? ''),
                 'slug' => trim((string) ($postData['slug'] ?? '')),
-                'id_categorie' => (int) ($postData['id_categorie'] ?? 0)
+                'id_categorie' => (int) ($postData['id_categorie'] ?? 0),
+                'image' => null
             ];
 
-            $validationError = validateArticleForm($pdo, $data);
-            if ($validationError !== '') {
-                $state['error'] = $validationError;
-            } else {
+            // Gérer l'upload d'image
+            if (isset($_FILES['image'])) {
                 try {
-                    createArticle($pdo, $data);
-                    $state['message'] = 'Article cree avec succes';
-                    $state['articles'] = getAllArticles($pdo);
+                    $data['image'] = handleImageUpload($_FILES['image']);
                 } catch (Exception $e) {
-                    $state['error'] = 'Erreur : ' . $e->getMessage();
+                    $state['error'] = 'Erreur lors de l\'upload de l\'image : ' . $e->getMessage();
+                }
+            }
+
+            if ($state['error'] === '') {
+                $validationError = validateArticleForm($pdo, $data);
+                if ($validationError !== '') {
+                    $state['error'] = $validationError;
+                } else {
+                    try {
+                        createArticle($pdo, $data);
+                        $state['message'] = 'Article cree avec succes';
+                        $state['articles'] = getAllArticles($pdo);
+                    } catch (Exception $e) {
+                        $state['error'] = 'Erreur : ' . $e->getMessage();
+                    }
                 }
             }
         }
 
         if ($action === 'update') {
             $id = (int) ($postData['id'] ?? 0);
+            
+            // Récupérer l'article existant pour conserver l'image si pas de nouvel upload
+            $existingArticle = getArticleById($pdo, $id);
+            
             $data = [
                 'titre' => trim((string) ($postData['titre'] ?? '')),
                 'contenu' => sanitizeRichHtml($postData['contenu'] ?? ''),
                 'slug' => trim((string) ($postData['slug'] ?? '')),
-                'id_categorie' => (int) ($postData['id_categorie'] ?? 0)
+                'id_categorie' => (int) ($postData['id_categorie'] ?? 0),
+                'image' => $existingArticle['image'] ?? null
             ];
 
-            $validationError = validateArticleForm($pdo, $data, $id);
-            if ($validationError !== '') {
-                $state['error'] = $validationError;
-            } else {
+            // Gérer l'upload d'image
+            if (isset($_FILES['image'])) {
                 try {
-                    updateArticle($pdo, $id, $data);
-                    $state['message'] = 'Article mis a jour avec succes';
-                    $state['articles'] = getAllArticles($pdo);
+                    $data['image'] = handleImageUpload($_FILES['image'], $data['image']);
                 } catch (Exception $e) {
-                    $state['error'] = 'Erreur : ' . $e->getMessage();
+                    $state['error'] = 'Erreur lors de l\'upload de l\'image : ' . $e->getMessage();
+                }
+            }
+
+            if ($state['error'] === '') {
+                $validationError = validateArticleForm($pdo, $data, $id);
+                if ($validationError !== '') {
+                    $state['error'] = $validationError;
+                } else {
+                    try {
+                        updateArticle($pdo, $id, $data);
+                        $state['message'] = 'Article mis a jour avec succes';
+                        $state['articles'] = getAllArticles($pdo);
+                    } catch (Exception $e) {
+                        $state['error'] = 'Erreur : ' . $e->getMessage();
+                    }
                 }
             }
         }

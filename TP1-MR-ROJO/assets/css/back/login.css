@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1a3a52 0%, #2d5a7b 100%);
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -64,8 +64,8 @@ input[type="password"] {
 input[type="email"]:focus,
 input[type="password"]:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #1a3a52;
+    box-shadow: 0 0 0 3px rgba(26, 58, 82, 0.1);
 }
 
 .alert {
@@ -99,12 +99,12 @@ input[type="password"]:focus {
 }
 
 .btn-primary {
-    background-color: #667eea;
+    background-color: #1a3a52;
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #5568d3;
+    background-color: #2d5a7b;
 }
 
 .btn-primary:active {

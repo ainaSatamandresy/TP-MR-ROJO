@@ -284,14 +284,15 @@ function getArticleById(PDO $pdo, $id) {
  * Créer un article
  */
 function createArticle(PDO $pdo, $data) {
-    $sql = "INSERT INTO article (titre, contenu, slug, id_categorie) 
-            VALUES (:titre, :contenu, :slug, :id_categorie)";
+    $sql = "INSERT INTO article (titre, contenu, slug, id_categorie, image) 
+            VALUES (:titre, :contenu, :slug, :id_categorie, :image)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         'titre' => $data['titre'],
         'contenu' => $data['contenu'],
         'slug' => $data['slug'],
-        'id_categorie' => $data['id_categorie']
+        'id_categorie' => $data['id_categorie'],
+        'image' => $data['image'] ?? null
     ]);
     return $pdo->lastInsertId();
 }
@@ -301,7 +302,7 @@ function createArticle(PDO $pdo, $data) {
  */
 function updateArticle(PDO $pdo, $id, $data) {
     $sql = "UPDATE article 
-            SET titre = :titre, contenu = :contenu, slug = :slug, id_categorie = :id_categorie 
+            SET titre = :titre, contenu = :contenu, slug = :slug, id_categorie = :id_categorie, image = :image 
             WHERE id = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
@@ -309,7 +310,8 @@ function updateArticle(PDO $pdo, $id, $data) {
         'titre' => $data['titre'],
         'contenu' => $data['contenu'],
         'slug' => $data['slug'],
-        'id_categorie' => $data['id_categorie']
+        'id_categorie' => $data['id_categorie'],
+        'image' => $data['image'] ?? null
     ]);
 }
 
@@ -451,5 +453,75 @@ function getDashboardStats(PDO $pdo) {
     $stats['latest_articles'] = $stmt->fetchAll();
     
     return $stats;
+}
+
+/**
+ * Gérer l'upload d'image pour un article
+ * @param array $file - Le fichier provenant de $_FILES['image']
+ * @param string|null $oldImage - L'ancienne image à supprimer si elle existe
+ * @return string|null - Le nom du fichier uploadé ou null si pas d'upload
+ * @throws Exception
+ */
+function handleImageUpload($file, $oldImage = null) {
+    // Si pas de fichier uploadé
+    if (!isset($file) || !isset($file['tmp_name']) || $file['tmp_name'] === '') {
+        return $oldImage; // Retourner l'ancienne image si elle existe
+    }
+
+    // Vérifier les erreurs d'upload
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        $errorMessages = [
+            UPLOAD_ERR_INI_SIZE => 'Le fichier dépasse la taille maximale.',
+            UPLOAD_ERR_FORM_SIZE => 'Le fichier dépasse la taille maximale.',
+            UPLOAD_ERR_PARTIAL => 'L\'upload a été interrompu.',
+            UPLOAD_ERR_NO_FILE => 'Aucun fichier fourni.',
+            UPLOAD_ERR_NO_TMP_DIR => 'Répertoire temporaire manquant.',
+            UPLOAD_ERR_CANT_WRITE => 'Erreur d\'écriture sur le disque.',
+            UPLOAD_ERR_EXTENSION => 'Extension PHP non autorisée.',
+        ];
+        throw new Exception($errorMessages[$file['error']] ?? 'Erreur d\'upload inconnue.');
+    }
+
+    // Vérifier le type MIME
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = finfo_file($finfo, $file['tmp_name']);
+    finfo_close($finfo);
+    
+    $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!in_array($mimeType, $allowedMimes)) {
+        throw new Exception('Le fichier doit être une image (JPEG, PNG, GIF ou WebP).');
+    }
+
+    // Vérifier la taille (max 5MB)
+    $maxSize = 5 * 1024 * 1024; // 5MB
+    if ($file['size'] > $maxSize) {
+        throw new Exception('Le fichier dépasse 5MB.');
+    }
+
+    // Créer le répertoire s'il n'existe pas
+    $uploadDir = __DIR__ . '/../assets/images/articles/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    // Générer un nom unique pour le fichier
+    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $filename = 'article-' . time() . '-' . uniqid() . '.' . $extension;
+    $filepath = $uploadDir . $filename;
+
+    // Déplacer le fichier uploadé
+    if (!move_uploaded_file($file['tmp_name'], $filepath)) {
+        throw new Exception('Erreur lors du déplacement du fichier.');
+    }
+
+    // Supprimer l'ancienne image si elle existe et qu'on en a une nouvelle
+    if ($oldImage && $oldImage !== $filename) {
+        $oldPath = $uploadDir . $oldImage;
+        if (file_exists($oldPath) && is_file($oldPath)) {
+            unlink($oldPath);
+        }
+    }
+
+    return $filename;
 }
 ?>

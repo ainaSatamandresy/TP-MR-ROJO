@@ -69,7 +69,7 @@ $editArticle = $state['editArticle'];
                     </div>
                     
                     <div class="form-container">
-                        <form id="articleForm" method="POST" action="">
+                        <form id="articleForm" method="POST" action="" enctype="multipart/form-data">
                             <input type="hidden" name="action" value="<?php echo $editId ? 'update' : 'create'; ?>">
                             <?php if ($editId): ?>
                                 <input type="hidden" name="id" value="<?php echo $editId; ?>">
@@ -115,6 +115,23 @@ $editArticle = $state['editArticle'];
                             </div>
                             
                             <div class="form-group">
+                                <label for="image">Image de l'article</label>
+                                <input 
+                                    type="file" 
+                                    id="image" 
+                                    name="image" 
+                                    accept="image/jpeg,image/png,image/gif,image/webp"
+                                >
+                                <small class="form-help-text">Formats acceptés: JPEG, PNG, GIF, WebP (max 5MB)</small>
+                                <?php if ($editArticle && !empty($editArticle['image'])): ?>
+                                    <div class="image-preview">
+                                        <p>Image actuelle:</p>
+                                        <img src="/assets/images/articles/<?php echo escapeHtml($editArticle['image']); ?>" alt="<?php echo escapeHtml($editArticle['titre']); ?>" style="max-width: 200px; max-height: 200px;">
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <div class="form-group">
                                 <label for="contenu">Contenu</label>
                                 <textarea 
                                     id="contenu" 
@@ -147,6 +164,7 @@ $editArticle = $state['editArticle'];
                                 <thead>
                                     <tr>
                                         <th>Titre</th>
+                                        <th>Image</th>
                                         <th>Catégorie</th>
                                         <th>Prévisualisation</th>
                                         <th>Date</th>
@@ -157,6 +175,13 @@ $editArticle = $state['editArticle'];
                                     <?php foreach ($articles as $article): ?>
                                         <tr>
                                             <td class="article-title"><?php echo escapeHtml($article['titre']); ?></td>
+                                            <td class="article-image">
+                                                <?php if (!empty($article['image'])): ?>
+                                                    <img src="/assets/images/articles/<?php echo escapeHtml($article['image']); ?>" alt="<?php echo escapeHtml($article['titre']); ?>" class="article-thumbnail">
+                                                <?php else: ?>
+                                                    <span class="no-image">Pas d'image</span>
+                                                <?php endif; ?>
+                                            </td>
                                             <td><?php echo escapeHtml($article['categorie_nom'] ?? 'Sans catégorie'); ?></td>
                                             <td class="article-preview"><?php echo escapeHtml(excerptFromHtml($article['contenu'], 100)); ?></td>
                                             <td><?php echo date('d/m/Y', strtotime($article['date_publication'])); ?></td>

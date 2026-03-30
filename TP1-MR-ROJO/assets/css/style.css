@@ -16,7 +16,7 @@ body {
 /* ============= EN-TÊTE ============= */
 
 header {
-    background-color: #1a1a1a;
+    background-color: #1a3a52;
     color: white;
     padding: 1rem 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -45,7 +45,7 @@ header nav a {
 }
 
 header nav a:hover {
-    color: #ff9800;
+    color: #D4876A;
 }
 
 /* ============= MAIN ============= */
@@ -85,12 +85,12 @@ main {
 }
 
 .article-card h2 a {
-    color: #1a1a1a;
+    color: #1a3a52;
     text-decoration: none;
 }
 
 .article-card h2 a:hover {
-    color: #ff9800;
+    color: #D4876A;
 }
 
 .article-card .meta {
@@ -100,20 +100,20 @@ main {
 }
 
 .lire-plus {
-    color: #ff9800;
+    color: #D4876A;
     text-decoration: none;
     font-weight: bold;
     transition: color 0.3s;
 }
 
 .lire-plus:hover {
-    color: #f57c00;
+    color: #1a3a52;
 }
 
 /* ============= PIED DE PAGE ============= */
 
 footer {
-    background-color: #1a1a1a;
+    background-color: #1a3a52;
     color: white;
     text-align: center;
     padding: 2rem;
