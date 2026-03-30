@@ -32,11 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administration — Connexion | Guerre en Iran</title>
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Connexion a l'espace d'administration pour gérer les contenus du site.">
+    <meta name="robots" content="index, follow">
     <link rel="stylesheet" href="/assets/css/back/login.css">
 </head>
 <body>
-    <div class="login-container">
+    <main class="login-container" id="main-content">
         <div class="login-header">
             <h1>Administration</h1>
             <p>Connexion au tableau de bord</p>
@@ -90,6 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="login-footer">
             <p>© 2026 - Actualités Guerre en Iran</p>
         </div>
-    </div>
+    </main>
 </body>
 </html>

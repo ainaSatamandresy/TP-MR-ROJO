@@ -25,7 +25,8 @@ $editArticle = $state['editArticle'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des articles | Administration</title>
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Interface d'administration pour créer, modifier et supprimer les articles du site.">
+    <meta name="robots" content="index, follow">
     <link rel="stylesheet" href="/assets/css/back/common.css">
     <link rel="stylesheet" href="/assets/css/back/articles.css">
 </head>
@@ -47,7 +48,7 @@ $editArticle = $state['editArticle'];
         </div>
         
         <!-- MAIN CONTENT -->
-        <div class="main-content">
+        <main class="main-content" id="main-content">
             <div class="header">
                 <h1>Gestion des articles</h1>
             </div>
@@ -126,7 +127,7 @@ $editArticle = $state['editArticle'];
                                 <?php if ($editArticle && !empty($editArticle['image'])): ?>
                                     <div class="image-preview">
                                         <p>Image actuelle:</p>
-                                        <img src="/assets/images/articles/<?php echo escapeHtml($editArticle['image']); ?>" alt="<?php echo escapeHtml($editArticle['titre']); ?>" style="max-width: 200px; max-height: 200px;">
+                                        <img src="/assets/images/articles/<?php echo escapeHtml($editArticle['image']); ?>" alt="<?php echo escapeHtml($editArticle['titre']); ?>" style="max-width: 200px; max-height: 200px;" loading="lazy" decoding="async">
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -177,7 +178,7 @@ $editArticle = $state['editArticle'];
                                             <td class="article-title"><?php echo escapeHtml($article['titre']); ?></td>
                                             <td class="article-image">
                                                 <?php if (!empty($article['image'])): ?>
-                                                    <img src="/assets/images/articles/<?php echo escapeHtml($article['image']); ?>" alt="<?php echo escapeHtml($article['titre']); ?>" class="article-thumbnail">
+                                                    <img src="/assets/images/articles/<?php echo escapeHtml($article['image']); ?>" alt="<?php echo escapeHtml($article['titre']); ?>" class="article-thumbnail" loading="lazy" decoding="async">
                                                 <?php else: ?>
                                                     <span class="no-image">Pas d'image</span>
                                                 <?php endif; ?>
@@ -203,14 +204,14 @@ $editArticle = $state['editArticle'];
                     <?php endif; ?>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
     
     <!-- MODAL DE CONFIRMATION DE SUPPRESSION -->
-    <div id="deleteModal" class="modal">
+    <div id="deleteModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" aria-describedby="deleteModalDescription" aria-hidden="true">
         <div class="modal-content">
-            <div class="modal-header">Confirmer la suppression</div>
-            <div class="modal-body">
+            <div class="modal-header" id="deleteModalTitle">Confirmer la suppression</div>
+            <div class="modal-body" id="deleteModalDescription">
                 Êtes-vous sûr de vouloir supprimer l'article "<span id="articleTitle"></span>" ?
             </div>
             <div class="modal-actions">
@@ -227,12 +228,14 @@ $editArticle = $state['editArticle'];
     <script>
         function openDeleteModal(id, title) {
             document.getElementById('deleteModal').classList.add('show');
+            document.getElementById('deleteModal').setAttribute('aria-hidden', 'false');
             document.getElementById('articleId').value = id;
             document.getElementById('articleTitle').textContent = title;
         }
         
         function closeDeleteModal() {
             document.getElementById('deleteModal').classList.remove('show');
+            document.getElementById('deleteModal').setAttribute('aria-hidden', 'true');
         }
         
         // Générer le slug automatiquement
@@ -253,18 +256,34 @@ $editArticle = $state['editArticle'];
         });
     </script>
 
-    <script src="https://cdn.tiny.cloud/1/76asbq6w8fd2frlh4vh05ptfhzkivrq7cd07sd96fcqndxg8/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+    <script src="https://cdn.tiny.cloud/1/76asbq6w8fd2frlh4vh05ptfhzkivrq7cd07sd96fcqndxg8/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous" defer></script>
     <script>
-        tinymce.init({
-            selector: '#contenu',
-            menubar: false,
-            plugins: 'lists link image',
-            toolbar: 'undo redo | blocks | bold italic underline | bullist numlist blockquote | link image',
-            height: 320,
-            branding: false,
-            block_formats: 'Paragraphe=p; Titre 1=h1; Titre 2=h2; Titre 3=h3; Titre 4=h4; Titre 5=h5; Titre 6=h6',
-            valid_elements: 'p,br,strong/b,em/i,u,h1,h2,h3,h4,h5,h6,ul,ol,li,blockquote,a[href|title|target|rel],img[src|alt|title|width|height|loading]'
-        });
+        function initTinyMceEditor() {
+            if (typeof tinymce === 'undefined') {
+                return;
+            }
+
+            tinymce.init({
+                selector: '#contenu',
+                menubar: false,
+                plugins: 'lists link image',
+                toolbar: 'undo redo | blocks | bold italic underline | bullist numlist blockquote | link image',
+                height: 320,
+                branding: false,
+                aria_label: 'Editeur de contenu de l article',
+                iframe_attrs: {
+                    title: 'Editeur de contenu'
+                },
+                block_formats: 'Paragraphe=p; Titre 1=h1; Titre 2=h2; Titre 3=h3; Titre 4=h4; Titre 5=h5; Titre 6=h6',
+                valid_elements: 'p,br,strong/b,em/i,u,h1,h2,h3,h4,h5,h6,ul,ol,li,blockquote,a[href|title|target|rel],img[src|alt|title|width|height|loading]'
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initTinyMceEditor);
+        } else {
+            initTinyMceEditor();
+        }
 
         const articleForm = document.getElementById('articleForm');
         if (articleForm) {

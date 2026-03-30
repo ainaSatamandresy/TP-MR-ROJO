@@ -18,7 +18,8 @@ $stats = getDashboardStats($pdo);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de bord | Administration</title>
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Tableau de bord d'administration pour gérer les contenus, catégories et statistiques du site.">
+    <meta name="robots" content="index, follow">
     <link rel="stylesheet" href="/assets/css/back/common.css">
     <link rel="stylesheet" href="/assets/css/back/dashboard.css">
 </head>
@@ -40,7 +41,7 @@ $stats = getDashboardStats($pdo);
         </div>
         
         <!-- MAIN CONTENT -->
-        <div class="main-content">
+        <main class="main-content" id="main-content">
             <div class="header">
                 <h1>Tableau de bord</h1>
                 <div class="user-info">
@@ -94,7 +95,7 @@ $stats = getDashboardStats($pdo);
                     <?php endif; ?>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
     
     <script>

@@ -24,7 +24,8 @@ $editCategory = $state['editCategory'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des catégories | Administration</title>
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Interface d'administration pour gérer les catégories du site et leur organisation.">
+    <meta name="robots" content="index, follow">
     <link rel="stylesheet" href="/assets/css/back/common.css">
     <link rel="stylesheet" href="/assets/css/back/categories.css">
 </head>
@@ -46,7 +47,7 @@ $editCategory = $state['editCategory'];
         </div>
         
         <!-- MAIN CONTENT -->
-        <div class="main-content">
+        <main class="main-content" id="main-content">
             <div class="header">
                 <h1>Gestion des catégories</h1>
             </div>
@@ -153,14 +154,14 @@ $editCategory = $state['editCategory'];
                     <?php endif; ?>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
     
     <!-- MODAL DE CONFIRMATION DE SUPPRESSION -->
-    <div id="deleteModal" class="modal">
+    <div id="deleteModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" aria-describedby="deleteModalDescription" aria-hidden="true">
         <div class="modal-content">
-            <div class="modal-header">Confirmer la suppression</div>
-            <div class="modal-body">
+            <div class="modal-header" id="deleteModalTitle">Confirmer la suppression</div>
+            <div class="modal-body" id="deleteModalDescription">
                 Êtes-vous sûr de vouloir supprimer la catégorie "<span id="categoryName"></span>" ?
             </div>
             <div class="modal-actions">
@@ -177,12 +178,14 @@ $editCategory = $state['editCategory'];
     <script>
         function openDeleteModal(id, name) {
             document.getElementById('deleteModal').classList.add('show');
+            document.getElementById('deleteModal').setAttribute('aria-hidden', 'false');
             document.getElementById('categoryId').value = id;
             document.getElementById('categoryName').textContent = name;
         }
         
         function closeDeleteModal() {
             document.getElementById('deleteModal').classList.remove('show');
+            document.getElementById('deleteModal').setAttribute('aria-hidden', 'true');
         }
         
         // Générer le slug automatiquement (optionnel)

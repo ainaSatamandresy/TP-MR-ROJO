@@ -131,12 +131,12 @@ body {
 }
 
 .btn-danger {
-    background-color: #D4876A;
+    background-color: #b25635;
     color: white;
 }
 
 .btn-danger:hover {
-    background-color: #b86b52;
+    background-color: #95472c;
 }
 
 .btn-secondary {
@@ -167,9 +167,9 @@ body {
 }
 
 .alert-success {
-    background-color: #efe;
-    color: #3c3;
-    border: 1px solid #cfc;
+    background-color: #e7f6eb;
+    color: #1f6f31;
+    border: 1px solid #9ed5ad;
 }
 
 .form-group {
@@ -204,7 +204,7 @@ body {
 }
 
 .form-help-text {
-    color: #999;
+    color: #595959;
     font-size: 12px;
 }
 
@@ -235,7 +235,7 @@ th {
     padding: 15px 20px;
     text-align: left;
     font-weight: 600;
-    color: #666;
+    color: #3d3d3d;
     font-size: 12px;
     text-transform: uppercase;
     border-bottom: 2px solid #eee;
@@ -254,7 +254,7 @@ tr:hover {
 .empty-state {
     text-align: center;
     padding: 40px 20px;
-    color: #999;
+    color: #595959;
 }
 
 .actions {
@@ -301,7 +301,7 @@ tr:hover {
 
 .modal-body {
     margin-bottom: 20px;
-    color: #666;
+    color: #3d3d3d;
     font-size: 14px;
 }
 
