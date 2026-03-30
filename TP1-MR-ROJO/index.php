@@ -42,6 +42,15 @@ $pageTitles = [
     'contact' => 'Contact - Iran News'
 ];
 
+$pageDescriptions = [
+    'accueil' => SEO_DEFAULT_DESCRIPTION,
+    'actualites' => 'Dernieres actualites sur la situation en Iran, analyses et informations recentes.',
+    'categorie' => 'Actualites classees par categorie pour suivre les sujets qui vous interessent.',
+    'article' => 'Consultez un article detaille avec son contexte et ses informations associees.',
+    'recherche' => 'Recherchez rapidement des articles du site par mots-cles.',
+    'contact' => 'Contactez l equipe editoriale du site pour toute demande d information.'
+];
+
 $pageStylesMap = [
     'accueil' => ['/assets/css/front/accueil.css'],
     'actualites' => ['/assets/css/front/accueil.css'],
@@ -52,9 +61,10 @@ $pageStylesMap = [
 ];
 
 $title = $pageTitles[$page] ?? 'Iran News';
+$meta_description = $pageDescriptions[$page] ?? SEO_DEFAULT_DESCRIPTION;
 $page_styles = $pageStylesMap[$page] ?? [];
-$hide_global_header = ($page === 'accueil');
-$hide_global_footer = ($page === 'accueil');
+$hide_global_header = false;
+$hide_global_footer = false;
 
 // Inclure l'en-tête
 require_once 'inc/header.php';
