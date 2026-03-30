@@ -9,26 +9,7 @@ $homeData = getFrontAccueilData($pdo);
 $categories = $homeData['categories'];
 $featured_articles = $homeData['featured_articles'];
 $latest_articles = $homeData['latest_articles'];
-$page_description = $homeData['page_description'];
 ?>
-
-<header class="front-hero">
-    <div class="container">
-        <h1><?php echo SITE_NAME; ?></h1>
-        <p><?php echo escapeHtml($page_description); ?></p>
-    </div>
-</header>
-
-<nav class="front-nav">
-    <div class="container">
-        <ul>
-            <li><a href="/">Accueil</a></li>
-            <li><a href="/actualites/">Actualités</a></li>
-            <li><a href="/recherche/">Recherche</a></li>
-            <li><a href="/contact/">Contact</a></li>
-        </ul>
-    </div>
-</nav>
 
 <section class="container">
     <?php if (!empty($featured_articles)): ?>
@@ -100,10 +81,3 @@ $page_description = $homeData['page_description'];
         </section>
     <?php endif; ?>
 </section>
-
-<footer class="front-footer">
-    <div class="container">
-        <p>&copy; 2026 <?php echo SITE_NAME; ?> - Tous droits réservés</p>
-        <p><a href="/">Accueil</a> | <a href="/mentions-legales/">Mentions légales</a> | <a href="/contact/">Contact</a></p>
-    </div>
-</footer>
