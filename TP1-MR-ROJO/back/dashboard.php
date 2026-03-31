@@ -39,7 +39,7 @@ $stats = getDashboardStats($pdo);
             </ul>
             
             <div class="sidebar-logout">
-                <a href="<?php echo htmlspecialchars('?action=logout'); ?>" class="sidebar-logout-link"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M10 17l1.4-1.4L8.8 13H20v-2H8.8l2.6-2.6L10 7l-5 5 5 5zM4 4h8V2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8v-2H4V4z"/></svg><span class="sidebar-link-label">Deconnexion</span></a>
+                <a href="/back/logout.php" class="sidebar-logout-link"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M10 17l1.4-1.4L8.8 13H20v-2H8.8l2.6-2.6L10 7l-5 5 5 5zM4 4h8V2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8v-2H4V4z"/></svg><span class="sidebar-link-label">Deconnexion</span></a>
             </div>
         </div>
         

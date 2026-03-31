@@ -23,13 +23,14 @@ function processAdminLogin(PDO $pdo, array $postData): array {
 
         // Compatible hash (recommande) et valeur legacy en clair.
         $storedPassword = (string) ($user['password'] ?? '');
-        $isValid = password_verify($password, $storedPassword) || hash_equals($storedPassword, $password);
 
+        $isValid = password_verify($password, $storedPassword) || hash_equals($storedPassword, $password);
+        
         if (!$isValid) {
             return ['error' => 'Email ou mot de passe incorrect', 'success' => ''];
         }
 
-        session_regenerate_id(true);
+      //  session_regenerate_id(true);
         $_SESSION['admin'] = [
             'id' => $user['id'],
             'email' => $user['email'],
