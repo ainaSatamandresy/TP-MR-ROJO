@@ -19,6 +19,12 @@ try {
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]
     );
+    // Forcer l'encodage client PostgreSQL en UTF-8 pour éviter les problèmes d'affichage
+    try {
+        $pdo->exec("SET client_encoding = 'UTF8'");
+    } catch (Exception $e) {
+        // Ignorer les erreurs non critiques ici
+    }
 } catch (PDOException $e) {
     die("Erreur de connexion : " . $e->getMessage());
 }

@@ -64,5 +64,6 @@ $articleLead = excerptFromHtml($article['contenu'] ?? '', 190);
 
     <div class="article-content">
         <?php echo $contentHtml; ?>
+        
     </div>
 </article>
