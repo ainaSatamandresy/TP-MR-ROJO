@@ -2,6 +2,10 @@
 /**
  * En-tête du site
  */
+// Envoyer l'en-tête HTTP Content-Type avec charset utf-8
+if (!headers_sent()) {
+    header('Content-Type: text/html; charset=utf-8');
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">

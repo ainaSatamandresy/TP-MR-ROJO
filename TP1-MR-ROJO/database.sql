@@ -59,11 +59,80 @@ INSERT INTO categorie (nom, slug, description) VALUES
 ('Militaire', 'militaire', 'Affaires militaires'),
 ('Économie', 'economie', 'Informations économiques');
 
-INSERT INTO article (titre, contenu, slug, id_categorie) VALUES
-('Crise politique en Iran', 'Texte Article 1...', 'crise-politique-iran', 1),
-('Tensions militaires escalade', 'Texte Article 2...', 'tensions-militaires-escalade', 2),
-('Impact économique de la situation', 'Texte Article 3...', 'impact-economique', 3);
 
 INSERT INTO utilisateur (email, password, nom, role) VALUES
-('admin@example.com', '$2y$10$AJayeZNKNKYXDw3YyTq/zuKA3zJKqH9BZpFfQEXEVqjvzj7LAYbmm', 'Admin', 'admin');
+('admin@example.com', 'admin123', 'Admin', 'admin');
 -- Mot de passe par défaut : 'admin123'
+
+
+INSERT INTO article (titre, contenu, slug, date_publication, id_categorie, vues, image)
+VALUES (
+'Tensions politiques croissantes en Iran',
+'<h2>Une situation politique sous haute tension</h2>
+<p>Depuis plusieurs semaines, <strong>l''Iran</strong> traverse une période de tensions politiques importantes. Les débats internes se multiplient entre les différentes factions du pouvoir.</p>
+
+<h2>Des manifestations dans plusieurs villes</h2>
+<p>Des manifestations ont été signalées dans plusieurs grandes villes. Les citoyens expriment leurs préoccupations face à la situation économique et aux décisions gouvernementales récentes.</p>
+
+<h2>Réactions internationales</h2>
+<p>La communauté internationale observe avec attention l''évolution de la situation, appelant au dialogue et à la stabilité dans la région.</p>',
+'tensions-politiques-iran',
+NOW(),
+1,
+0,
+'article-politique-iran.jpg'
+);
+
+INSERT INTO article (titre, contenu, slug, date_publication, id_categorie, vues, image)
+VALUES (
+'Renforcement militaire stratégique en Iran',
+'<h2>Une présence militaire accrue</h2>
+<p>Les forces armées iraniennes ont récemment intensifié leur présence dans certaines zones stratégiques du pays.</p>
+
+<h2>Des exercices militaires à grande échelle</h2>
+<p>Plusieurs exercices militaires ont été organisés afin de tester la capacité de réaction des troupes. <strong>Ces démonstrations de force</strong> visent à dissuader toute menace extérieure.</p>
+
+<h2>Un message envoyé à la région</h2>
+<p>Selon les analystes, ces mouvements militaires sont également un signal adressé aux pays voisins et aux puissances internationales.</p>',
+'renforcement-militaire-iran',
+NOW(),
+2,
+0,
+'article-militaire-iran.jpg'
+);
+
+INSERT INTO article (titre, contenu, slug, date_publication, id_categorie, vues, image)
+VALUES (
+'Impact économique des tensions en Iran',
+'<h2>Une économie sous pression</h2>
+<p>L''économie iranienne subit les conséquences directes des tensions politiques et militaires. L''inflation continue d''augmenter.</p>
+
+<h2>Le marché du pétrole affecté</h2>
+<p>Le secteur pétrolier, pilier de l''économie du pays, connaît des fluctuations importantes en raison des incertitudes géopolitiques.</p>
+
+<h2>Perspectives pour les mois à venir</h2>
+<p>Les experts restent prudents et anticipent une période d''instabilité économique prolongée si la situation ne s''améliore pas.</p>',
+'impact-economique-iran',
+NOW(),
+3,
+0,
+'article-economie-iran.jpg'
+);
+
+INSERT INTO article (titre, contenu, slug, date_publication, id_categorie, vues, image)
+VALUES (
+'Escalade militaire dans le Golfe',
+'<h2>Des tensions accrues dans le Golfe persique</h2>
+<p>Les récentes opérations militaires ont intensifié les tensions dans le <strong>Golfe persique</strong>.</p>
+
+<h2>Des incidents en mer</h2>
+<p>Plusieurs incidents impliquant des navires ont été signalés, augmentant les inquiétudes concernant la sécurité maritime.</p>
+
+<h2>Appels à la désescalade</h2>
+<p>Plusieurs organisations internationales appellent à une désescalade rapide afin d''éviter un conflit ouvert.</p>',
+'escalade-militaire-golfe',
+NOW(),
+2,
+0,
+'article-golfe.jpg'
+);

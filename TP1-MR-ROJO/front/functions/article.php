@@ -43,7 +43,9 @@ function optimizeArticleContentImages(string $html, string $fallbackAlt): string
 
     $doc = new DOMDocument('1.0', 'UTF-8');
     libxml_use_internal_errors(true);
-    $doc->loadHTML('<div id="content-root">' . $html . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    // Convertir en entités HTML pour préserver les caractères UTF-8 correctement
+    $htmlForDom = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+    $doc->loadHTML('<div id="content-root">' . $htmlForDom . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     libxml_clear_errors();
 
     $root = $doc->getElementById('content-root');
